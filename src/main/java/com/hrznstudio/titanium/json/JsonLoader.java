@@ -62,6 +62,7 @@ public class JsonLoader<T> extends SimplePreparableReloadListener<Map<Identifier
         ts.entrySet()
             .parallelStream()
             .map(entry -> new Tuple<>(entry.getKey(), jsonProvider.provide(entry.getKey(), entry.getValue().getAsJsonObject())))
+            .toList()
             .forEach(tuple -> director.put(tuple.getA(), tuple.getB()));
         logger.info("Loaded " + ts.size() + " " + type);
     }
