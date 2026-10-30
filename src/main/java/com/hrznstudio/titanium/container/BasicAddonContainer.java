@@ -73,8 +73,8 @@ public class BasicAddonContainer extends BasicInventoryContainer implements IObj
 
     @Override
     public boolean stillValid(Player playerIn) {
-        return !worldPosCallable.evaluate((world, blockPos) -> playerIn.distanceToSqr(blockPos.getX() + 0.5D,
-            blockPos.getY() + 0.5D, blockPos.getZ() + 0.5D) <= 64.0D, true) || !(provider instanceof IContainerAddonProvider) || ((IContainerAddonProvider) provider).canInteract();
+        return worldPosCallable.evaluate((world, blockPos) -> playerIn.distanceToSqr(blockPos.getX() + 0.5D,
+            blockPos.getY() + 0.5D, blockPos.getZ() + 0.5D) <= 64.0D, true) && (!(provider instanceof IContainerAddonProvider) || ((IContainerAddonProvider) provider).canInteract());
     }
 
     public static BasicAddonContainer create(int id, Inventory inventory, RegistryFriendlyByteBuf packetBuffer) {
