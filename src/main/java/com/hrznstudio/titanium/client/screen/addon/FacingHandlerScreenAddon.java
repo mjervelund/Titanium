@@ -25,6 +25,7 @@ import com.hrznstudio.titanium.network.messages.ButtonClickNetworkMessage;
 import com.hrznstudio.titanium.util.AssetUtil;
 import com.hrznstudio.titanium.util.FacingUtil;
 import com.hrznstudio.titanium.util.LangUtil;
+import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -138,8 +139,8 @@ public class FacingHandlerScreenAddon extends BasicScreenAddon {
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (button == 1) return false;
-        Screen screen = Minecraft.getInstance().screen;
+        if (button == InputConstants.MOUSE_BUTTON_RIGHT) return false;
+        Screen screen = Minecraft.getInstance().gui.screen();
         if (screen instanceof IScreenAddonConsumer && screen instanceof AbstractContainerScreen) {
             if (!isMouseOver(mouseX, mouseY))
                 return false;

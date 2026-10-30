@@ -25,7 +25,7 @@ import net.minecraft.client.input.KeyEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import org.lwjgl.glfw.GLFW;
+import com.mojang.blaze3d.platform.InputConstants;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -119,7 +119,7 @@ public class BasicContainerScreen<T extends AbstractContainerMenu> extends Abstr
                         return true;
                     }
                     if (widget.isFocused()) {
-                        if (event.scancode() == 18) {
+                        if (Minecraft.getInstance().options.keyInventory.isActiveAndMatches(InputConstants.getKey(event))) {
                             return true;
                         }
                     }
@@ -130,8 +130,8 @@ public class BasicContainerScreen<T extends AbstractContainerMenu> extends Abstr
     }
 
     private void checkForMouseDrag(int mouseX, int mouseY) {
-        int pressedButton = GLFW.glfwGetMouseButton(Minecraft.getInstance().getWindow().handle(), GLFW.GLFW_MOUSE_BUTTON_LEFT);
-        if (pressedButton == GLFW.GLFW_PRESS) {//Main Window
+        int pressedButton = InputConstants.MOUSE_BUTTON_LEFT;
+        if (Minecraft.getInstance().mouseHandler.isLeftPressed()) {//Main Window
             if (!this.isMouseDragging) {
                 this.isMouseDragging = true;
             } else {

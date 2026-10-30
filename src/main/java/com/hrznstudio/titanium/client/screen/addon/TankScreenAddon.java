@@ -14,6 +14,7 @@ import com.hrznstudio.titanium.component.fluid.FluidTankComponent;
 import com.hrznstudio.titanium.network.locator.ILocatable;
 import com.hrznstudio.titanium.network.messages.ButtonClickNetworkMessage;
 import com.hrznstudio.titanium.util.AssetUtil;
+import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -171,8 +172,8 @@ public class TankScreenAddon extends BasicScreenAddon {
                     int amount = isBucket ? FluidType.BUCKET_VOLUME : Integer.MAX_VALUE;
                     boolean canFillFromItem = canMove(itemHandler, tank, amount, isBucket);
                     boolean canDrainFromItem = canMove(tank, itemHandler, amount, isBucket);
-                    if (canFillFromItem && button == 0) compoundNBT.putBoolean("Fill", true);
-                    if (canDrainFromItem && button == 1) compoundNBT.putBoolean("Fill", false);
+                    if (canFillFromItem && button == InputConstants.MOUSE_BUTTON_LEFT) compoundNBT.putBoolean("Fill", true);
+                    if (canDrainFromItem && button == InputConstants.MOUSE_BUTTON_RIGHT) compoundNBT.putBoolean("Fill", false);
                 });
                 Titanium.NETWORK.sendToServer(new ButtonClickNetworkMessage(locatable.getLocatorInstance(), -3, compoundNBT));
                 return true;
