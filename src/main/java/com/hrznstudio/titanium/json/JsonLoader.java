@@ -10,11 +10,11 @@ package com.hrznstudio.titanium.json;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.hrznstudio.titanium.json.jsondirector.IJsonDirector;
+import com.mojang.datafixers.util.Pair;
 import net.minecraft.resources.FileToIdConverter;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimplePreparableReloadListener;
-import net.minecraft.util.Tuple;
 import net.minecraft.util.profiling.ProfilerFiller;
 import org.apache.logging.log4j.Logger;
 
@@ -61,8 +61,8 @@ public class JsonLoader<T> extends SimplePreparableReloadListener<Map<Identifier
         director.clear();
         ts.entrySet()
             .parallelStream()
-            .map(entry -> new Tuple<>(entry.getKey(), jsonProvider.provide(entry.getKey(), entry.getValue().getAsJsonObject())))
-            .forEach(tuple -> director.put(tuple.getA(), tuple.getB()));
+            .map(entry -> Pair.of(entry.getKey(), jsonProvider.provide(entry.getKey(), entry.getValue().getAsJsonObject())))
+            .forEach(tuple -> director.put(tuple.getFirst(), tuple.getSecond()));
         logger.info("Loaded " + ts.size() + " " + type);
     }
 }
