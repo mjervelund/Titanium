@@ -186,7 +186,7 @@ public class FacingHandlerScreenAddon extends BasicScreenAddon {
 
                         @Override
                         public boolean mouseClicked(double mouseX, double mouseY, int mouse) {
-                            Screen gui = Minecraft.getInstance().screen;
+                            Screen gui = Minecraft.getInstance().gui.screen();
                             StateButtonInfo info = getStateInfo();
                             if (info != null && gui instanceof MenuAccess<?>) {
                                 if (!isMouseOver(mouseX, mouseY))
