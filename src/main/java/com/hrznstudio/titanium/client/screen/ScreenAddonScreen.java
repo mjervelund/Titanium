@@ -90,7 +90,7 @@ public abstract class ScreenAddonScreen extends Screen implements IScreenAddonCo
             } else {
                 for (IScreenAddon iScreenAddon : this.addonList) {
                     if (iScreenAddon.isMouseOver(mouseX, mouseY)) {
-                        iScreenAddon.mouseDragged(mouseX - x, mouseY - y, pressedButton, dragX, dragY);
+                        iScreenAddon.mouseDragged(mouseX - x, mouseY - y, GLFW.GLFW_MOUSE_BUTTON_LEFT, dragX, dragY);
                     }
                 }
             }
