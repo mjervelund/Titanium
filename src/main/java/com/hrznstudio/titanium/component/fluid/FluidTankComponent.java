@@ -31,6 +31,7 @@ import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 
 public class FluidTankComponent<T extends IComponentHarness> extends FluidStacksResourceHandler implements IScreenAddonProvider,
         IContainerAddonProvider, INBTSerializable<CompoundTag> {
@@ -42,6 +43,7 @@ public class FluidTankComponent<T extends IComponentHarness> extends FluidStacks
     private Type tankType;
     private Action tankAction;
     private Runnable onContentChange;
+    private Predicate<FluidStack> validator;
 
     public FluidTankComponent(String name, int amount, int posX, int posY) {
         super(1, amount);
@@ -52,6 +54,7 @@ public class FluidTankComponent<T extends IComponentHarness> extends FluidStacks
         this.tankAction = Action.BOTH;
         this.onContentChange = () -> {
         };
+        this.validator = stack -> true;
     }
 
     /**
@@ -110,6 +113,19 @@ public class FluidTankComponent<T extends IComponentHarness> extends FluidStacks
     public FluidTankComponent<T> setTankAction(Action tankAction) {
         this.tankAction = tankAction;
         return this;
+    }
+
+    /**
+     * Limits which fluids the tank accepts, forced inserts included (the 1.21 FluidTank validator)
+     */
+    public FluidTankComponent<T> setValidator(Predicate<FluidStack> validator) {
+        this.validator = validator;
+        return this;
+    }
+
+    @Override
+    public boolean isValid(int index, FluidResource resource) {
+        return validator.test(resource.toStack(1));
     }
 
     @Override
