@@ -138,7 +138,7 @@ public class BasicContainerScreen<T extends AbstractContainerMenu> extends Abstr
             } else {
                 for (IScreenAddon iScreenAddon : this.addons) {
                     if (iScreenAddon.isMouseOver(mouseX, mouseY)) {
-                        iScreenAddon.mouseDragged(mouseX - this.xCenter, mouseY - this.yCenter, GLFW.GLFW_MOUSE_BUTTON_LEFT, dragX, dragY);
+                        iScreenAddon.mouseDragged(mouseX - this.xCenter, mouseY - this.yCenter, pressedButton, dragX, dragY);
                     }
                 }
             }
