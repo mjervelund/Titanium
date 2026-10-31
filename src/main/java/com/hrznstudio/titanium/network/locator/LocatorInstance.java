@@ -15,6 +15,7 @@ import net.minecraft.world.level.Level;
 
 import javax.annotation.Nonnull;
 import java.lang.reflect.Field;
+import java.util.Objects;
 import java.util.Optional;
 
 public abstract class LocatorInstance {
@@ -33,6 +34,23 @@ public abstract class LocatorInstance {
 
     public ContainerLevelAccess getWorldPosCallable(Level world) {
         return ContainerLevelAccess.NULL;
+    }
+
+    /**
+     * Whether {@code other} locates the same thing: same type and equal serialized fields.
+     */
+    public final boolean matches(LocatorInstance other) {
+        if (other == null || other.getClass() != getClass()) return false;
+        try {
+            for (Field f : getClass().getDeclaredFields()) {
+                if (!f.isAccessible()) f.setAccessible(true);
+                if (CompoundSerializableDataHandler.acceptField(f, f.getType()) && !Objects.equals(f.get(this), f.get(other)))
+                    return false;
+            }
+        } catch (IllegalAccessException e) {
+            return false;
+        }
+        return true;
     }
 
     public final void fromBytes(RegistryFriendlyByteBuf buf) {
