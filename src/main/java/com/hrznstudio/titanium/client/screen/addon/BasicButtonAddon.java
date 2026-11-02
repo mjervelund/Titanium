@@ -8,6 +8,7 @@
 package com.hrznstudio.titanium.client.screen.addon;
 
 import com.hrznstudio.titanium.Titanium;
+import com.mojang.blaze3d.platform.InputConstants;
 import com.hrznstudio.titanium.client.screen.asset.IAssetProvider;
 import com.hrznstudio.titanium.component.button.ButtonComponent;
 import com.hrznstudio.titanium.network.locator.ILocatable;
@@ -57,7 +58,8 @@ public class BasicButtonAddon extends BasicScreenAddon {
             Minecraft.getInstance().getSoundManager().play(new SimpleSoundInstance(SoundEvents.UI_BUTTON_CLICK.value(), SoundSource.PLAYERS, 1f, 1f, RandomSource.create(), Minecraft.getInstance().player.blockPosition())); //getPosition
             ILocatable locatable = (ILocatable) ((AbstractContainerScreen) screen).getMenu();
             CompoundTag compoundTag = new CompoundTag();
-            compoundTag.putInt("Button", button);
+            // Server handlers read the old numbering (0 = left, 1 = right, 2 = middle); 26.3 events use SDL numbers.
+            compoundTag.putInt("Button", button == InputConstants.MOUSE_BUTTON_LEFT ? 0 : button == InputConstants.MOUSE_BUTTON_RIGHT ? 1 : button);
             Titanium.NETWORK.sendToServer(new ButtonClickNetworkMessage(locatable.getLocatorInstance(), this.button.getId(), compoundTag));
         }
         return true;

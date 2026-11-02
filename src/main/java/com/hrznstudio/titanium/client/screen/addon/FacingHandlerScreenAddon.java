@@ -193,7 +193,7 @@ public class FacingHandlerScreenAddon extends BasicScreenAddon {
                                     return false;
                                 CompoundTag compound = new CompoundTag();
                                 compound.putString("Facing", facing.name());
-                                int faceMode = (getState() + (mouse == 0 ? 1 : -1)) % handler.getValidFacingModes().length;
+                                int faceMode = (getState() + (mouse == InputConstants.MOUSE_BUTTON_LEFT ? 1 : -1)) % handler.getValidFacingModes().length;
                                 if (faceMode < 0) faceMode = handler.getValidFacingModes().length - 1;
                                 compound.putInt("Next", faceMode);
                                 compound.putString("Name", handler.getName());
