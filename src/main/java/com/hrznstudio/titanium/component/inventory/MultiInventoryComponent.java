@@ -43,6 +43,7 @@ public class MultiInventoryComponent<T extends IComponentHarness> implements ISc
     public void add(Object... component) {
         Arrays.stream(component).filter(this::accepts).forEach(inventoryComponent -> {
             this.inventoryHandlers.add((InventoryComponent<T>) inventoryComponent);
+            rebuildCapability(new FacingUtil.Sideness[]{null});
             rebuildCapability(FacingUtil.Sideness.values());
         });
     }
