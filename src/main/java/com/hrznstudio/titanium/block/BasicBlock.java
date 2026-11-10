@@ -117,7 +117,10 @@ public abstract class BasicBlock extends Block implements IRecipeProvider, IBloc
     @Override
     @SuppressWarnings("deprecation")
     protected void affectNeighborsAfterRemoval(BlockState state, net.minecraft.server.level.ServerLevel worldIn, BlockPos pos, boolean isMoving) {
-        Containers.dropContents(worldIn, pos, getDynamicDrops(state, worldIn, pos, net.minecraft.world.level.block.Blocks.AIR.defaultBlockState(), isMoving));
+        // Blocks with a block entity drop in BasicTile#preRemoveSideEffects: the block entity is already gone here
+        if (!state.hasBlockEntity()) {
+            Containers.dropContents(worldIn, pos, getDynamicDrops(state, worldIn, pos, net.minecraft.world.level.block.Blocks.AIR.defaultBlockState(), isMoving));
+        }
         worldIn.updateNeighbourForOutputSignal(pos, this);
         super.affectNeighborsAfterRemoval(state, worldIn, pos, isMoving);
     }
