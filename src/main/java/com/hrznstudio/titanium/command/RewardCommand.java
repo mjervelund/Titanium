@@ -22,7 +22,6 @@ import net.minecraft.commands.arguments.IdentifierArgument;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
-import net.minecraft.world.level.Level;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -57,7 +56,7 @@ public class RewardCommand {
         }
         if (changed) {
             context.getSource().getServer().execute(() -> {
-                CompoundTag nbt = RewardWorldStorage.get(context.getSource().getServer().getLevel(Level.OVERWORLD)).serializeSimple(context.getSource().getServer().registryAccess());
+                CompoundTag nbt = RewardWorldStorage.get(context.getSource().getServer().overworld()).serializeSimple(context.getSource().getServer().registryAccess());
                 context.getSource().getServer().getPlayerList().getPlayers().forEach(serverPlayerEntity -> Titanium.NETWORK.sendTo(new RewardSyncMessage(nbt), serverPlayerEntity));
             });
         }
@@ -65,11 +64,11 @@ public class RewardCommand {
 
     private static boolean removeReward(CommandContext<CommandSourceStack> context) {
         CommandSourceStack source = context.getSource();
-        RewardWorldStorage rewardWorldStorage = RewardWorldStorage.get(source.getLevel());
+        RewardWorldStorage rewardWorldStorage = RewardWorldStorage.get(source.getServer().overworld());
         try {
             rewardWorldStorage.remove(source.getPlayerOrException().getUUID(), context.getArgument("reward", Identifier.class));
             rewardWorldStorage.setDirty();
-            context.getSource().sendSuccess(() -> Component.literal("titanium.rewards.remove_success"), true);
+            context.getSource().sendSuccess(() -> Component.translatable("titanium.rewards.remove_success"), true);
             return true;
         } catch (CommandSyntaxException e) {
             e.printStackTrace();
@@ -83,14 +82,14 @@ public class RewardCommand {
             Identifier resourceLocation = context.getArgument("reward", Identifier.class);
             if (RewardManager.get().getReward(resourceLocation) == null || !RewardManager.get().getReward(resourceLocation).isPlayerValid(source.getPlayerOrException().getUUID()))
                 return false;
-            RewardWorldStorage rewardWorldStorage = RewardWorldStorage.get(source.getLevel());
+            RewardWorldStorage rewardWorldStorage = RewardWorldStorage.get(source.getServer().overworld());
             String option = context.getArgument("option", String.class);
             if (!Arrays.asList(RewardManager.get().getReward(resourceLocation).getOptions()).contains(option)) {
                 return false;
             }
             rewardWorldStorage.add(source.getPlayerOrException().getUUID(), context.getArgument("reward", Identifier.class), option);
             rewardWorldStorage.setDirty();
-            context.getSource().sendSuccess(() -> Component.literal("titanium.rewards.enabled_success"), true);
+            context.getSource().sendSuccess(() -> Component.translatable("titanium.rewards.enabled_success"), true);
             return true;
         } catch (CommandSyntaxException e) {
             e.printStackTrace();
@@ -100,7 +99,7 @@ public class RewardCommand {
 
     private static List<Identifier> getAvailableIdentifiers(CommandContext<CommandSourceStack> context) {
         CommandSourceStack source = context.getSource();
-        RewardWorldStorage rewardWorldStorage = RewardWorldStorage.get(source.getLevel());
+        RewardWorldStorage rewardWorldStorage = RewardWorldStorage.get(source.getServer().overworld());
         List<Identifier> resourceLocations = new ArrayList<>(rewardWorldStorage.getFreeRewards());
         try {
             resourceLocations.addAll(RewardManager.get().collectRewardsIdentifiers(context.getSource().getPlayerOrException().getUUID()));

@@ -37,7 +37,7 @@ public class RewardGrantCommand {
         Identifier resourceLocation = context.getArgument("reward", Identifier.class);
         for (Reward reward : RewardManager.get().getGiver(context.getSource().getPlayerOrException().getUUID(), context.getSource().getTextName()).getRewards()) {
             if (reward.getIdentifier().equals(resourceLocation)) {
-                RewardWorldStorage rewardWorldStorage = RewardWorldStorage.get(context.getSource().getLevel());
+                RewardWorldStorage rewardWorldStorage = RewardWorldStorage.get(context.getSource().getServer().overworld());
                 rewardWorldStorage.addFree(resourceLocation);
                 rewardWorldStorage.setDirty();
                 context.getSource().sendSuccess(() -> Component.translatable("titanium.rewards.granted_success"), true);
