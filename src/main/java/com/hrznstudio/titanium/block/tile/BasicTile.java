@@ -8,6 +8,7 @@
 package com.hrznstudio.titanium.block.tile;
 
 import com.hrznstudio.titanium.Titanium;
+import com.hrznstudio.titanium.block.BasicBlock;
 import com.hrznstudio.titanium.block.BasicTileBlock;
 import com.hrznstudio.titanium.nbthandler.NBTManager;
 import com.hrznstudio.titanium.network.messages.TileFieldNetworkMessage;
@@ -16,11 +17,13 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -50,6 +53,19 @@ public class BasicTile<T extends BasicTile<T>> extends BlockEntity implements IS
 
     public void onNeighborChanged(Block blockIn, BlockPos fromPos) {
 
+    }
+
+    /**
+     * Drops the block's dynamic drops (machine inventories, upgrades) while this block entity still exists. Since 1.21.5
+     * the block entity is removed before {@code Block#affectNeighborsAfterRemoval}, where they used to be collected, so
+     * every Titanium machine lost its contents when broken.
+     */
+    @Override
+    public void preRemoveSideEffects(BlockPos pos, BlockState state) {
+        super.preRemoveSideEffects(pos, state);
+        if (this.level != null && state.getBlock() instanceof BasicBlock block) {
+            Containers.dropContents(this.level, pos, block.getDynamicDrops(state, this.level, pos, Blocks.AIR.defaultBlockState(), false));
+        }
     }
 
     @Override
