@@ -48,7 +48,9 @@ public class LockableInventoryBundle<T extends BasicTile & IComponentHarness> im
 
     public LockableInventoryBundle(T componentHarness, InventoryComponent<T> inventory, int lockPosX, int lockPosY, boolean isLocked) {
         this.componentHarness = componentHarness;
-        this.inventory = inventory;
+        // Owned by the harness like ActiveTile#addInventory (and TankInteractionBundle) do it: without it the side
+        // buttons label the directions as if the machine faced north and content changes never mark it dirty.
+        this.inventory = inventory.setComponentHarness(componentHarness);
         this.cachedFilter = inventory.getInsertPredicate();
         this.filter = new ItemStack[this.inventory.getSlots()];
         Arrays.fill(this.filter, ItemStack.EMPTY);
