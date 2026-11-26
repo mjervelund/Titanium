@@ -22,6 +22,8 @@ modId = "titanium" #mandatory
 version = "${file.jarVersion}" #mandatory
 # A display name for the mod
 displayName = "Titanium" #mandatory
+iconFile="icons/titanium.png"
+iconBlur=false
 # The description text for the mod (multi line!) (#mandatory)
 description = '''
 A Lib
